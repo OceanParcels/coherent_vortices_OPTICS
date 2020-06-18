@@ -1,8 +1,9 @@
 """
-Clustering of trajectories with OPTICS. For both flows, we apply:
-    - Direct trajectory clustering
-    - Embedding with classical MDS into 2D, then clustering
-    - Network of Padberg-Gehle and Schneide 2017
+"Ordering of trajectories reveals hierarchical finite-time coherent sets in Lagrangian particle data"
+David Wichmann, Christian Kehl, Henk A. Dijkstra, and Erik van Sebille
+questions to d.wichmann@uu.nl
+
+Clustering of trajectories with OPTICS for the different embeddings
 """
 
 import numpy as np

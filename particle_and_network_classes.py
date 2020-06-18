@@ -1,13 +1,8 @@
 """
-Density based spectral clustering reveals coherent structures in networks derived from Lagrangian trajectories
-------------------------------------------------------------------------------
-David Wichmann, Christian Kehl, Henk A. Dijkstra, Erik van Sebille
+"Ordering of trajectories reveals hierarchical finite-time coherent sets in Lagrangian particle data"
+David Wichmann, Christian Kehl, Henk A. Dijkstra, and Erik van Sebille
+questions to d.wichmann@uu.nl
 
-Questions to: d.wichmann@uu.nl
-
-"""
-
-"""
 Main script to handle trajectory data and network analysis.
 
 Classes:

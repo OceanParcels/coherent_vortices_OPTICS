@@ -40,7 +40,7 @@ def vel(y,t): #2D velocity
     
 tau = 40 * 86400 #days in seconds
 dt_output = 86400/10 #output every 0.1 days
-dt_int = 1 #60 seconds integration time step
+dt_int = 1
 n_it = int(dt_output / dt_int) #index of output
 
 #discretization

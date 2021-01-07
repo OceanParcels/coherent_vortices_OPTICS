@@ -1,4 +1,13 @@
 """
+Ordering of trajectories reveals hierarchical finite-time coherent
+sets in Lagrangian particle data: detecting Agulhas rings in the
+South Atlantic Ocean
+------------------------------------------------------------------------------
+David Wichmann, Christian Kehl, Henk A. Dijkstra, Erik van Sebille
+
+"""
+
+"""
 Create bickley-jet trajectories.
 """
 
@@ -36,14 +45,14 @@ def vel(y,t): #2D velocity
     
 tau = 40 * 86400 #days in seconds
 dt_output = 86400/10 #output every 0.1 days
-dt_int = 1 #60 seconds integration time step
+dt_int = 1 #1 second integration time step
 n_it = int(dt_output / dt_int) #index of output
 
 #discretization
 t = np.arange(0, tau + dt_output, dt_int) 
-x_range = np.linspace(0,1,201) * np.pi * r0 #in km
+x_range = np.linspace(0,1,101) * np.pi * r0 #in km
 x_range = x_range[:-1]
-y_range = np.linspace(-3.,3.,60) * 1000 #in km
+y_range = np.linspace(-3.,3.,30) * 1000 #in km
 
 #initial conditions
 X0, Y0 = np.meshgrid(x_range, y_range)
@@ -63,5 +72,5 @@ for i in range(len(X0)):
     trajectories_x[i] = sol[:,0][::n_it] % (np.pi * r0)
     trajectories_y[i] = sol[:,1][::n_it]
 
-np.savez("bickley_jet_trajectories", drifter_longitudes = trajectories_x, 
+np.savez("bickley_jet_trajectories_lowres", drifter_longitudes = trajectories_x, 
           drifter_latitudes = trajectories_y, drifter_time = [])

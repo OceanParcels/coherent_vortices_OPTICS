@@ -1,13 +1,19 @@
 """
-Clustering of trajectories with OPTICS. For both flows, we apply:
-    - Direct trajectory clustering
-    - Embedding with classical MDS into 2D, then clustering
-    - Network of Padberg-Gehle and Schneide 2017
+Ordering of trajectories reveals hierarchical finite-time coherent
+sets in Lagrangian particle data: detecting Agulhas rings in the
+South Atlantic Ocean
+------------------------------------------------------------------------------
+David Wichmann, Christian Kehl, Henk A. Dijkstra, Erik van Sebille
+
+"""
+
+"""
+Clustering of trajectories with OPTICS.
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
-from particle_and_network_classes import trajectory_data,  undirected_network
+from particle_and_network_classes import trajectory_data, undirected_network
 from sklearn.cluster import KMeans, OPTICS
 import matplotlib
 import matplotlib.colors
@@ -19,24 +25,45 @@ r0 = 6371.
 
 parameters = {}
 
+parameters["BJ_direct_embedding_random"] = {"data set": "bickley_jet_trajectories.npz", # trajectory data set
+                                     "domain name": "bickley_jet_domain", # domain
+                                     "embedding method": "direct embedding", # embedding method
+                                     "t_select": range(0,410,50),
+                                     "n_select": np.random.randint(0, 12000, 2000), # choose 2,000 random trajectories
+                                     "KMeans": False, # if KMeans is performed
+                                     "MinPts": 15, # MinPts parameter for OPTICS
+                                     "OPTICS": True, # If OPTICS is performed
+                                     "optics_params": [["DBSCAN", 18000]],
+                                     "ylims": [4000,30000], # y-limit for reachability plots
+                                     "t_indices": [3, 6], # times (index) for plots
+                                     "t_labels": ["15 days", "30 days"], # time labels for plots
+                                     "markersize": 15, # marker size for scatter plots
+                                     "plot_embedding": False, # if embedding (first two axes) is plotted
+                                     "plot reachabilities": False,
+                                     "animation": False,
+                                     "filename": "./figures/BJ_direct_embedding_random2000" # filename of figure
+                                     }
+
+
 parameters["BJ_direct_embedding"] = {"data set": "bickley_jet_trajectories.npz", # trajectory data set
                                      "domain name": "bickley_jet_domain", # domain
                                      "embedding method": "direct embedding", # embedding method
-                                     "t_select": range(0,410,10), # take daily output
+                                     "t_select": range(0, 410, 10), # take daily output
                                      "n_select": None, # if we reduce to a subset of trajectories
                                      "KMeans": False, # if KMeans is performed
                                      "MinPts": 80, # MinPts parameter for OPTICS
                                      "OPTICS": True, # If OPTICS is performed
-                                     "optics_params": [["dbscan", 58000], # OPTICS clustering results
-                                                       ["dbscan", 40000],
-                                                       ["dbscan", 15000]],
+                                     "optics_params": [["DBSCAN", 58000], # OPTICS clustering results
+                                                       ["DBSCAN", 38000],
+                                                       ["DBSCAN", 15000]],
                                      "ylims": [9000,80000], # y-limit for reachability plots
                                      "t_indices": [15, 30], # times (index) for plots
                                      "t_labels": ["15 days", "30 days"], # time labels for plots
                                      "markersize": 0.3, # marker size for scatter plots
                                      "plot_embedding": False, # if embedding (first two axes) is plotted
                                      "plot reachabilities": False,
-                                     "filename": "./figures/Bickley_Jet/BJ_direct_embedding" # filename of figure
+                                     "animation": False,
+                                     "filename": "./figures/BJ_direct_embedding" # filename of figure
                                      } 
 
 
@@ -51,14 +78,15 @@ parameters["BJ_MDS"] = {"data set": "bickley_jet_trajectories.npz",
                                     "Kmeans_clusters": 8,
                                     "OPTICS": True,
                                     "MinPts": 80,
-                                    "optics_params": [["dbscan", 1000]],
+                                    "optics_params": [["DBSCAN", 1000]],
                                     "ylims": [0,10000],
                                     "t_indices": [15, 30],
                                     "t_labels": ["15 days", "30 days"],
                                     "markersize": 0.3,
                                     "plot_embedding": True,
                                     "plot reachabilities": False,
-                                    "filename": "./figures/Bickley_Jet/BJ_cMDS"}
+                                    "animation": False,
+                                    "filename": "./figures/BJ_cMDS"}
 
 
 parameters["Agulhas_direct_embedding"] = {"data set": "Agulhas_particles.npz",
@@ -67,10 +95,11 @@ parameters["Agulhas_direct_embedding"] = {"data set": "Agulhas_particles.npz",
                                      "t_select": range(21), #long time for animation
                                      "n_select": None,
                                      "KMeans": False,
+                                     "Kmeans_clusters": 40,
                                      "MinPts": 100,
                                      "OPTICS": True,
-                                     "optics_params": [["dbscan", 850], 
-                                                       ["xi", 0.03],
+                                     "optics_params": [["DBSCAN", 850], 
+                                                       ["DBSCAN", 550],
                                                        ["xi", 0.025]],
                                      "ylims": [400, 1000],
                                      "t_indices": [0, 20],
@@ -79,29 +108,7 @@ parameters["Agulhas_direct_embedding"] = {"data set": "Agulhas_particles.npz",
                                      "plot_embedding": False,
                                      "plot reachabilities": True,
                                      "animation": True,
-                                     "filename": "./figures/Agulhas/Agulhas_direct_embedding"}
-
-
-parameters["Agulhas_direct_embedding_incomplete"] = {"data set": "Agulhas_particles.npz",
-                                    "domain name": "agulhas_domain",
-                                    "embedding method": "direct embedding",
-                                    "t_select": range(21),
-                                    "n_select": np.random.randint(0, 23821, 5000), # choose 12,000 random trajectories
-                                    "KMeans": False,
-                                    "OPTICS": True,
-                                    "MinPts": 20,
-                                    "optics_params": [["dbscan", 850],
-                                                      ["xi", 0.07],
-                                                      ["xi", 0.08]],
-                                    "ylims": [200, 1300],
-                                    "t_indices": [0, 20],
-                                    "t_labels": ["0 days", "100 days"],
-                                    "markersize": 6,
-                                    "plot_embedding": False,
-                                    "plot reachabilities": False,
-                                    "animation": False,
-                                    "filename": "./figures/Agulhas/Agulhas_direct_embedding_incomplete"}
-
+                                     "filename": "./figures/Agulhas_direct_embedding"}
 
 
 parameters["Agulhas_MDS_embedding"] = {"data set": "Agulhas_particles.npz",
@@ -114,7 +121,7 @@ parameters["Agulhas_MDS_embedding"] = {"data set": "Agulhas_particles.npz",
                                     "Kmeans_clusters": 40,
                                     "OPTICS": True,
                                     "MinPts": 30,
-                                    "optics_params": [["dbscan", 100]],
+                                    "optics_params": [["DBSCAN", 80]],
                                     "ylims": [0, 500],
                                     "t_indices": [0, 20],
                                     "t_labels": ["0 days", "100 days"],
@@ -122,7 +129,7 @@ parameters["Agulhas_MDS_embedding"] = {"data set": "Agulhas_particles.npz",
                                     "plot_embedding": True,
                                     "plot reachabilities": False,
                                     "animation": False,
-                                    "filename": "./figures/Agulhas/Agulhas_MDS"}
+                                    "filename": "./figures/Agulhas_MDS"}
 
 parameters["Agulhas_network"] = {"data set": "Agulhas_particles.npz",
                                     "domain name": "agulhas_domain",
@@ -145,16 +152,20 @@ parameters["Agulhas_network"] = {"data set": "Agulhas_particles.npz",
                                     "markersize": 0.3,
                                     "plot_embedding": False,
                                     "plot reachabilities": False,
-                                    "filename": "./figures/Agulhas/Agulhas_network"}
+                                    "animation": False,
+                                    "filename": "./figures/Agulhas_network"}
 
-configurations = ["BJ_direct_embedding", 
+configurations = ["BJ_direct_embedding_random",
+                  "BJ_direct_embedding", 
                   "BJ_MDS",
                   "Agulhas_direct_embedding",
-                  "Agulhas_direct_embedding_incomplete",
                   "Agulhas_MDS_embedding",
                   "Agulhas_network"]
 
-P = parameters[configurations[2]]
+c = "Agulhas_direct_embedding"
+
+print("Configuration: ", c)
+P = parameters[c]
 particle_data = trajectory_data.from_npz(P["data set"],
                                          domain_name = P["domain name"],
                                          t_select = P["t_select"], 
@@ -173,7 +184,7 @@ if P["embedding method"] == "MDS":
     f = plt.figure(constrained_layout=True, figsize = (5, 3))
     ax = f.add_subplot()
     ax.set_ylabel(r"$\lambda_i$")
-    ax.set_title('Eigenvalues of K')
+    ax.set_title('Eigenvalues of B')
     plt.grid(True)
     ax.plot(range(len(val)), val, 'o', color = "darkslategrey", markersize=2)
     f.savefig(P["filename"] + "_MDSspectrum", dpi=300)
@@ -204,7 +215,7 @@ K-means (for Agulhas for comparison)
 """
 if P["KMeans"]:
     labels_kmeans = KMeans(n_clusters=P["Kmeans_clusters"], random_state=0).fit(X_embedding).labels_
-    labels_kmeans = labels_kmeans % 20
+    labels_kmeans = labels_kmeans % 20 # if there are many clusters
     bounds = np.arange(-.5,np.max(labels_kmeans)+1.5,1)
     norm = matplotlib.colors.BoundaryNorm(bounds, len(bounds))
     
@@ -236,6 +247,7 @@ if P["KMeans"]:
 """
 OPTICS
 """
+
 if P["OPTICS"]:
     optics_clustering = OPTICS(min_samples=P["MinPts"], metric="euclidean").fit(X_embedding)
     reachability = optics_clustering.reachability_
@@ -291,8 +303,31 @@ if P["OPTICS"]:
             a, b = r"$\epsilon$", P["optics_params"][i][1]
             ax.axhline(P["optics_params"][i][1], color="k")
         
-        ax.set_title(panel_labels[i][0] + P["optics_params"][i][0] + "-clustering, " +  a + ' = ' + str(b), size=10)
-        ax.set_ylabel(r"$r(p_i)$")
+        if P["optics_params"][i][0] == "DBSCAN":
+            cluster_type = "DBSCAN"
+        else:
+            cluster_type = r"$\xi$"
+        
+        if P["domain name"] == "bickley_jet_domain":
+            if b % 1000 == 0:
+                print_b = str(int(b/1000))
+                if print_b == "1":
+                    print_b = ""
+                else:
+                    print_b = print_b + r"$\cdot$"
+            ax.set_title(panel_labels[i][0] + cluster_type + "-clustering, " +  a + ' = ' + print_b + r"$10^6$ km", size=10)
+            ax.set_ylabel(r"$r(p_i)\; (10^3$ km)")
+        elif P["domain name"] == "agulhas_domain":
+            if P["embedding method"] == "network":
+                ax.set_title(panel_labels[i][0] + cluster_type + "-clustering, " +  a + ' = ' + str(b), size=10)
+                ax.set_ylabel(r"$r(p_i)$")
+            elif P["optics_params"][i][0] == 'xi':
+                ax.set_title(panel_labels[i][0] + cluster_type + "-clustering, " +  a + ' = ' + str(b), size=10)
+                ax.set_ylabel(r"$r(p_i)\; (km)$")                
+            else:
+                ax.set_title(panel_labels[i][0] + cluster_type+ "-clustering, " +  a + ' = ' + str(b) + " km", size=10)
+                ax.set_ylabel(r"$r(p_i)\; (km)$")
+                
         ax.set_xlabel(r"$i$")
         ax.tick_params(labelsize=8)
     
@@ -339,7 +374,10 @@ if P["plot_embedding"]:
     ax2.set_xlabel("dimension 1")
     ax1.set_xlabel("dimension 1")
     ax1.set_title("(a) No labels")
-    ax2.set_title(r"(b) OPTICS " + P["optics_params"][i][0] + "-clustering, " +  a + ' = ' + str(b))
+    if P["domain name"] == "bickley_jet_domain":
+        ax2.set_title(r"(b) " + P["optics_params"][i][0] + "-clustering, " +  a + ' = ' + print_b + r"$10^6$ km")
+    elif P["domain name"] == "agulhas_domain":
+        ax2.set_title(r"(b) " + P["optics_params"][i][0] + "-clustering, " +  a + ' = ' + str(b) + r" km")
     ax3.set_title("(c) k-Means (K=" + str(P["Kmeans_clusters"]) + ")")
     ax1.set_ylabel("dimension 2")
     plt.tight_layout()
@@ -353,7 +391,8 @@ if P["plot reachabilities"]:
     f = plt.figure(constrained_layout=True, figsize = (6, 3))
     ax = f.add_subplot()
     particle_data.scatter_position_with_labels(ax, reachability, cbar=True, size=1,
-                                                  t=0, cmap = 'inferno', vmax=1000)   
+                                                  t=0, cmap = 'inferno', vmax=1000,
+                                                  cbartitle = "reachability value (km)")   
     f.savefig(P["filename"] + "_reachabilities", dpi=300)
     
 if P["animation"]:
@@ -363,8 +402,6 @@ if P["animation"]:
                                          n_select = P["n_select"])
     particle_data.animate_particles_geo(Labels_clusters, 
                                     filename='movie', 
-                                    animation_time=140, 
+                                    animation_time=145, 
                                     cmap='tab20', 
                                     norm=norms[0])
-
-    

@@ -1,18 +1,17 @@
 """
-Density based spectral clustering reveals coherent structures in networks derived from Lagrangian trajectories
+Ordering of trajectories reveals hierarchical finite-time coherent
+sets in Lagrangian particle data: detecting Agulhas rings in the
+South Atlantic Ocean
 ------------------------------------------------------------------------------
 David Wichmann, Christian Kehl, Henk A. Dijkstra, Erik van Sebille
 
-Questions to: d.wichmann@uu.nl
-
 """
 
 """
-Main script to handle trajectory data and network analysis.
+Main library to handle trajectory data and network analysis.
 
 Classes:
-    - Class domain: contains the region of interest used to generate the partition and the 
-    region for plotting
+    - Class domain: contains the region of interest used to for plotting
     - Class trajectory_data: handle lon/lat/time drifter data and construct networks from them
     - Class undirected_network: network analysis, mostly spectral clustering, of an undirected network
 Notes:
@@ -20,7 +19,6 @@ Notes:
     - If applied to other regions, adjust the data set and the domain
 """
 
-import matplotlib.colors as colors
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import sparse
@@ -28,7 +26,6 @@ from mpl_toolkits.basemap import Basemap
 import scipy.sparse
 import matplotlib.animation as animation
 from scipy.spatial.distance import pdist, squareform
-from scipy.sparse.linalg import svds
 
 
 class domain(object):
@@ -119,48 +116,10 @@ class trajectory_data(object):
         return trajectory_data(drifter_longitudes = lon, drifter_latitudes=lat, 
                                domain_name=self.domain_name)
     
-    # def plot_discretized_distribution_geo(self, ax, labels, dx, dy, 
-    #                                       cmap = None, norm=None, 
-    #                                       land = True, cbar=True):
-    #     """
-    #     Plot binned 2D field on earth surface
-    #     - ax: axis object
-    #     """
-
-    #     Lons_edges = np.linspace(self.domain.minlon_plot,self.domain.maxlon_plot, 
-    #                              int((self.domain.maxlon_plot-self.domain.minlon_plot)/dx)+1) 
-        
-    #     Lats_edges = np.linspace(self.domain.minlat_plot,self.domain.maxlat_plot,
-    #                              int((self.domain.maxlat_plot-self.domain.minlat_plot)/dy)+1) 
-        
-    #     Lons_centered=np.diff(Lons_edges)/2+Lons_edges[:-1]
-    #     Lats_centered=np.diff(Lats_edges)/2+Lats_edges[:-1]
-    #     lon_bins_2d, lat_bins_2d = np.meshgrid(Lons_edges, Lats_edges)
-
-    #     #convert 1d vector to 2-dimensional array if needed
-    #     d2d = labels.reshape(len(Lats_centered), len(Lons_centered))
-        
-    #     if cmap == None: cmap = 'plasma'
-    #     if norm == None: norm= colors.Normalize(vmin=np.ma.min(d2d), vmax=np.ma.max(d2d))
-        
-    #     m = Basemap(projection='mill',llcrnrlat=self.domain.minlat_plot, urcrnrlat=self.domain.maxlat_plot, 
-    #                 llcrnrlon=self.domain.minlon_plot, urcrnrlon=self.domain.maxlon_plot, resolution='c')
-    #     m.drawparallels(self.domain.parallels, labels=[True, False, False, True], linewidth=1., size=9, color='lightgray')
-    #     m.drawmeridians(self.domain.meridians, labels=[False, False, False, True], linewidth=1., size=9, color='lightgray')
-    #     m.drawcoastlines()
-    #     if land: m.fillcontinents(color='dimgray')
-        
-    #     xs, ys = m(self.domain.lon_bins_2d, self.domain.lat_bins_2d)
-    
-    #     if cmap == None: p = ax.pcolormesh(xs, ys, d2d, rasterized=True)
-    #     else: p = ax.pcolormesh(xs, ys, d2d, rasterized=True, cmap = cmap, norm = norm)
-
-    #     if cbar: cbar = plt.colorbar(p, shrink=.8, aspect=10, orientation="horizontal", extend='max')
-            
                 
     def scatter_position_with_labels(self, ax, labels, size = 4, cmap=None, norm=None,
-                                         cbar=False, random_shuffle = True, alpha=0.6, 
-                                         t=0, vmax=None):
+                                         cbar=False, cbartitle="", random_shuffle = True, 
+                                         alpha=0.6, t=0, vmax=None):
         """
         For earth surface: Scatter positions at certain time t with color map given by labels
         - ax: pyplot axis
@@ -202,7 +161,9 @@ class trajectory_data(object):
         else:  p = ax.scatter(xs, ys, s=size, c=labels, cmap = cmap, norm=norm, 
                               alpha=alpha, vmax=vmax)   
 
-        if cbar: cbar = plt.colorbar(p, shrink=.8, aspect=10, orientation='horizontal', extend='max')
+        if cbar: 
+            cbar = plt.colorbar(p, shrink=.8, aspect=10, orientation='horizontal', extend='max')
+            cbar.set_label(cbartitle)
 
         if self.domain.domain_type == 'bickley_jet':        
             ax.set_xlim([self.domain.minlon_plot, self.domain.maxlon_plot])
@@ -363,27 +324,3 @@ class undirected_network(object):
             plt.show()
         
         return w, D_sqrt_inv.dot(v)
-    
-    # def compute_diffusionmap_embedding(self, K=20, plot=False):
-        
-    #     d = np.array(sparse.csr_matrix.sum(self.adjacency_matrix, axis=1))[:,0]
-    #     D_inv = scipy.sparse.diags([1./di if di!=0 else 0 for di in d ])
-    #     L = D_inv.dot(self.adjacency_matrix)
-    #     print('Computing diffusion map embedding')
-    #     w, v = sparse.linalg.eigs(L, k=K, which = 'LM')
-    #     w = np.real(w)
-    #     v = np.real(v)
-    #     inds = np.argsort(w)[::-1]
-    #     w = w[inds]
-    #     v = v[:,inds]
-        
-    #     if plot:
-    #         plt.plot(w, 'o')
-    #         plt.title('Eigenvalues of P')
-    #         plt.grid(True)
-    #         plt.show()
-        
-    #     return w, np.multiply(np.abs(w), v)[1:]
-   
-    
-   

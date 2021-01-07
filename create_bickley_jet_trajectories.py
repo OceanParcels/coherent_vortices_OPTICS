@@ -1,4 +1,5 @@
 """
+<<<<<<< HEAD
 Ordering of trajectories reveals hierarchical finite-time coherent
 sets in Lagrangian particle data: detecting Agulhas rings in the
 South Atlantic Ocean
@@ -8,6 +9,12 @@ David Wichmann, Christian Kehl, Henk A. Dijkstra, Erik van Sebille
 """
 
 """
+=======
+"Ordering of trajectories reveals hierarchical finite-time coherent sets in Lagrangian particle data"
+David Wichmann, Christian Kehl, Henk A. Dijkstra, and Erik van Sebille
+questions to d.wichmann@uu.nl
+
+>>>>>>> d28c0a80eb8835edb816c9959a4c08f34b1993a6
 Create bickley-jet trajectories.
 """
 
@@ -45,7 +52,11 @@ def vel(y,t): #2D velocity
     
 tau = 40 * 86400 #days in seconds
 dt_output = 86400/10 #output every 0.1 days
+<<<<<<< HEAD
 dt_int = 1 #1 second integration time step
+=======
+dt_int = 1
+>>>>>>> d28c0a80eb8835edb816c9959a4c08f34b1993a6
 n_it = int(dt_output / dt_int) #index of output
 
 #discretization
@@ -72,5 +83,10 @@ for i in range(len(X0)):
     trajectories_x[i] = sol[:,0][::n_it] % (np.pi * r0)
     trajectories_y[i] = sol[:,1][::n_it]
 
+<<<<<<< HEAD
 np.savez("bickley_jet_trajectories_lowres", drifter_longitudes = trajectories_x, 
           drifter_latitudes = trajectories_y, drifter_time = [])
+=======
+np.savez("bickley_jet_trajectories", drifter_longitudes = trajectories_x, 
+          drifter_latitudes = trajectories_y, drifter_time = [])
+>>>>>>> d28c0a80eb8835edb816c9959a4c08f34b1993a6

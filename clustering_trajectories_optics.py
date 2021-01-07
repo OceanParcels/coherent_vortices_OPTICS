@@ -1,4 +1,5 @@
 """
+<<<<<<< HEAD
 Ordering of trajectories reveals hierarchical finite-time coherent
 sets in Lagrangian particle data: detecting Agulhas rings in the
 South Atlantic Ocean
@@ -9,6 +10,13 @@ David Wichmann, Christian Kehl, Henk A. Dijkstra, Erik van Sebille
 
 """
 Clustering of trajectories with OPTICS.
+=======
+"Ordering of trajectories reveals hierarchical finite-time coherent sets in Lagrangian particle data"
+David Wichmann, Christian Kehl, Henk A. Dijkstra, and Erik van Sebille
+questions to d.wichmann@uu.nl
+
+Clustering of trajectories with OPTICS for the different embeddings
+>>>>>>> d28c0a80eb8835edb816c9959a4c08f34b1993a6
 """
 
 import numpy as np

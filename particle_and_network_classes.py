@@ -1,4 +1,5 @@
 """
+<<<<<<< HEAD
 Ordering of trajectories reveals hierarchical finite-time coherent
 sets in Lagrangian particle data: detecting Agulhas rings in the
 South Atlantic Ocean
@@ -9,6 +10,13 @@ David Wichmann, Christian Kehl, Henk A. Dijkstra, Erik van Sebille
 
 """
 Main library to handle trajectory data and network analysis.
+=======
+"Ordering of trajectories reveals hierarchical finite-time coherent sets in Lagrangian particle data"
+David Wichmann, Christian Kehl, Henk A. Dijkstra, and Erik van Sebille
+questions to d.wichmann@uu.nl
+
+Main script to handle trajectory data and network analysis.
+>>>>>>> d28c0a80eb8835edb816c9959a4c08f34b1993a6
 
 Classes:
     - Class domain: contains the region of interest used to for plotting
@@ -323,4 +331,32 @@ class undirected_network(object):
             plt.grid(True)
             plt.show()
         
+<<<<<<< HEAD
         return w, D_sqrt_inv.dot(v)
+=======
+        return w, D_sqrt_inv.dot(v)
+    
+    # def compute_diffusionmap_embedding(self, K=20, plot=False):
+        
+    #     d = np.array(sparse.csr_matrix.sum(self.adjacency_matrix, axis=1))[:,0]
+    #     D_inv = scipy.sparse.diags([1./di if di!=0 else 0 for di in d ])
+    #     L = D_inv.dot(self.adjacency_matrix)
+    #     print('Computing diffusion map embedding')
+    #     w, v = sparse.linalg.eigs(L, k=K, which = 'LM')
+    #     w = np.real(w)
+    #     v = np.real(v)
+    #     inds = np.argsort(w)[::-1]
+    #     w = w[inds]
+    #     v = v[:,inds]
+        
+    #     if plot:
+    #         plt.plot(w, 'o')
+    #         plt.title('Eigenvalues of P')
+    #         plt.grid(True)
+    #         plt.show()
+        
+    #     return w, np.multiply(np.abs(w), v)[1:]
+   
+    
+   
+>>>>>>> d28c0a80eb8835edb816c9959a4c08f34b1993a6

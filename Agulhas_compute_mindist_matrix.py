@@ -1,6 +1,10 @@
 """
-Create matrices with minimum distances between particles for the Agulhas flow.
-Used for the creationof the network of Padbergh-Gehle and Schneide 2017
+"Ordering of trajectories reveals hierarchical finite-time coherent sets in Lagrangian particle data"
+David Wichmann, Christian Kehl, Henk A. Dijkstra, and Erik van Sebille
+questions to d.wichmann@uu.nl
+
+Create matrix with minimum distances between particles for the Agulhas flow.
+Used for the creation of the network of Padbergh-Gehle and Schneide 2017
 """
 
 import numpy as np
